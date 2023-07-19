@@ -19,9 +19,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-  User.findById('64b68403739f5ef0aca92511')
+  User.findById('64b7b97511d0177b9b2ff7b6')
     .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err));
@@ -34,9 +34,21 @@ app.use(errorController.get404);
 
 mongoose
   .connect(
-    'mongodb+srv://oanceadancristian:5GsCvQeliGW66xNY@cluster1.i2ikruj.mongodb.net/'
+    'mongodb+srv://oanceadancristian:5GsCvQeliGW66xNY@cluster1.i2ikruj.mongodb.net/shop?retryWrites=true'
   )
   .then((result) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: 'Max',
+          email: 'max@test.com',
+          cart: {
+            items: [],
+          },
+        });
+        user.save();
+      }
+    });
     app.listen(3000);
   })
   .catch((err) => {
