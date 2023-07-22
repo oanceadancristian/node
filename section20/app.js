@@ -18,7 +18,7 @@ const MONGODB_URI =
 const app = express();
 const store = new MongoDBStore({
   uri: MONGODB_URI,
-  collection: '',
+  collection: 'sessions',
 });
 const csrfProtection = csrf();
 
